@@ -18,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.commit451.glyphith.api.Glyph
 import com.commit451.glyphith.ui.theme.GlyphithTheme
+import com.topjohnwu.superuser.Shell
+import timber.log.Timber
 
 
 class MainActivity : ComponentActivity() {

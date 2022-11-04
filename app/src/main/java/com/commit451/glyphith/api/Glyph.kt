@@ -1,5 +1,6 @@
 package com.commit451.glyphith.api
 
+import com.topjohnwu.superuser.Shell
 import timber.log.Timber
 import java.io.BufferedWriter
 import java.io.FileWriter
@@ -25,21 +26,12 @@ object Glyph {
         "sys/devices/platform/soc/984000.i2c/i2c-0/0-0020/leds/aw210xx_led/horse_race_leds_br"
 
     fun blink(): Throwable? {
-
-        return setNodeString(LIGHTBELT_BATTERY, 255)
+        return setNodeString(LIGHTBELT_BATTERY, 90)
     }
 
     private fun setNodeString(light: String, amount: Int): Throwable? {
-        try {
-            val fileWriter = FileWriter(light)
-            val bufferedWriter = BufferedWriter(fileWriter)
-            bufferedWriter.write(amount)
-            bufferedWriter.close()
-            Timber.d("LedLightTest_MainActivity", "setNodeString: )")
-        } catch (throwable: Throwable) {
-            Timber.e(throwable)
-            return throwable
-        }
+        val result = Shell.cmd("echo $amount > $light").exec()
+        Timber.d(result.toString())
         return null
     }
 }
