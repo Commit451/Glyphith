@@ -19,10 +19,14 @@ import com.commit451.glyphith.api.Glyph
 import com.commit451.glyphith.service.Actions
 import com.commit451.glyphith.service.EndlessService
 import com.commit451.glyphith.ui.theme.GlyphithTheme
+import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (intent.action == Actions.STOP.name) {
+            service(this, false)
+        }
         setContent {
             GlyphithTheme {
                 // A surface container using the 'background' color from the theme
@@ -33,6 +37,14 @@ class MainActivity : ComponentActivity() {
                     Screen(this)
                 }
             }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Timber.d("onNewIntent")
+        if (intent?.action == Actions.STOP.name) {
+            service(this, false)
         }
     }
 }

@@ -4,6 +4,7 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.Icon
 import android.os.IBinder
 import android.os.PowerManager
 import com.commit451.glyphith.MainActivity
@@ -128,22 +129,33 @@ class EndlessService : Service() {
         }
         notificationManager.createNotificationChannel(channel)
 
-        val pendingIntent: PendingIntent =
-            Intent(this, MainActivity::class.java).let { notificationIntent ->
-                PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
-            }
+        val pendingIntent = Intent(this, MainActivity::class.java).let {
+            PendingIntent.getActivity(this, 0, it, PendingIntent.FLAG_IMMUTABLE)
+        }
 
         val builder: Notification.Builder = Notification.Builder(
             this,
             notificationChannelId
         )
 
+        val pendingStopIntent = Intent(this, MainActivity::class.java).let {
+            it.action = Actions.STOP.name
+            PendingIntent.getActivity(this, 0, it, PendingIntent.FLAG_IMMUTABLE)
+        }
+
+        val stopAction = Notification.Action.Builder(
+            Icon.createWithResource(
+                this,
+                R.drawable.ic_baseline_flash_on_24
+            ), "Stop", pendingStopIntent
+        )
+            .build()
         return builder
-            .setContentTitle("Endless Service")
-            .setContentText("This is your favorite endless service working")
+            .setContentTitle("Glyph Service")
+            .setContentText("Your Glyph lights will blink every 5 seconds when the phone is on while this is active")
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_baseline_flash_on_24)
-            .setTicker("Ticker text")
+            .addAction(stopAction)
             .build()
     }
 
