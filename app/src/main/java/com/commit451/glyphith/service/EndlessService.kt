@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
+
 /**
  * https://robertohuertas.com/2019/06/29/android_foreground_services/
  */
@@ -79,7 +80,11 @@ class EndlessService : Service() {
         GlobalScope.launch(Dispatchers.IO) {
             while (isServiceStarted) {
                 launch(Dispatchers.Main) {
-                    Glyph.blink()
+                    val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+                    val isScreenAwake = powerManager.isInteractive
+                    if (isScreenAwake) {
+                        Glyph.blink()
+                    }
                 }
                 delay(TimeUnit.SECONDS.toMillis(5))
             }
