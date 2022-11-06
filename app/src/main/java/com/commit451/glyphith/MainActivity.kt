@@ -8,17 +8,15 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.commit451.glyphith.api.Glyph
 import com.commit451.glyphith.service.Actions
 import com.commit451.glyphith.service.EndlessService
 import com.commit451.glyphith.ui.theme.GlyphithTheme
+import com.commit451.glyphith.util.Util
 import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
@@ -29,7 +27,6 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             GlyphithTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -56,6 +53,15 @@ fun Screen(context: Context) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
+        var isServiceRunning by remember {
+            mutableStateOf(
+                Util.isMyServiceRunning(
+                    context,
+                    EndlessService::class.java
+                )
+            )
+        }
+
         Button(onClick = {
             Glyph.blink()
         }) {
@@ -68,17 +74,10 @@ fun Screen(context: Context) {
             Text(text = "Off")
         }
 
-        Button(onClick = {
-            service(context, true)
-        }) {
-            Text(text = "Start service")
-        }
-
-        Button(onClick = {
-            service(context, false)
-        }) {
-            Text(text = "Stop service")
-        }
+        Switch(checked = isServiceRunning, onCheckedChange = {
+            service(context, it)
+            isServiceRunning = it
+        })
     }
 }
 

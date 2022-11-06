@@ -3,7 +3,6 @@ package com.commit451.glyphith.service
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.IBinder
 import android.os.PowerManager
@@ -27,7 +26,7 @@ class EndlessService : Service() {
     private var isServiceStarted = false
 
     override fun onBind(intent: Intent): IBinder? {
-        log("Some component want to bind with the service")
+        log("Some component wants to bind with the service")
         // We don't provide binding, so return null
         return null
     }
@@ -70,12 +69,12 @@ class EndlessService : Service() {
         //setServiceState(this, ServiceState.STARTED)
 
         // we need this lock so our service gets not affected by Doze Mode
-        wakeLock =
-            (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
-                newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "EndlessService::lock").apply {
-                    acquire()
-                }
-            }
+//        wakeLock =
+//            (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
+//                newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "EndlessService::lock").apply {
+//                    acquire()
+//                }
+//            }
 
         // we're starting a loop in a coroutine
         GlobalScope.launch(Dispatchers.IO) {
@@ -101,7 +100,7 @@ class EndlessService : Service() {
                     it.release()
                 }
             }
-            stopForeground(true)
+            stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
         } catch (e: Exception) {
             log("Service stopped without being started: ${e.message}")
@@ -118,14 +117,9 @@ class EndlessService : Service() {
         val channel = NotificationChannel(
             notificationChannelId,
             "Endless Service notifications channel",
-            NotificationManager.IMPORTANCE_HIGH
-        ).let {
-            it.description = "Endless Service channel"
-            it.enableLights(true)
-            it.lightColor = Color.RED
-            it.enableVibration(true)
-            it.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
-            it
+            NotificationManager.IMPORTANCE_LOW
+        ).apply {
+            description = "Endless Service channel"
         }
         notificationManager.createNotificationChannel(channel)
 
@@ -152,7 +146,6 @@ class EndlessService : Service() {
             .build()
         return builder
             .setContentTitle("Glyph Service")
-            .setContentText("Your Glyph lights will blink every 5 seconds when the phone is on while this is active")
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_baseline_flash_on_24)
             .addAction(stopAction)
