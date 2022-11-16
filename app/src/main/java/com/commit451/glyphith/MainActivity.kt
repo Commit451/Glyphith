@@ -8,11 +8,14 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.commit451.glyphith.api.Glyph
+import com.commit451.glyphith.api.Light
 import com.commit451.glyphith.service.Actions
 import com.commit451.glyphith.service.EndlessService
 import com.commit451.glyphith.ui.theme.GlyphithTheme
@@ -35,6 +38,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        // comment this out normally
+        //service(this, true)
+        //Glyph.turnOnLight(Glyph.LightUSB)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -78,6 +84,30 @@ fun Screen(context: Context) {
             service(context, it)
             isServiceRunning = it
         })
+
+        lightSlider(light = Light.Battery)
+        lightSlider(light = Light.RearCamera)
+        lightSlider(light = Light.Diagonal)
+        lightSlider(light = Light.USBLine)
+        lightSlider(light = Light.USBDot)
+    }
+}
+
+@Composable
+private fun lightSlider(light: Light) {
+    var lightPercentage by remember {
+        mutableStateOf(Glyph.readLightValue(light))
+    }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+
+        Text(text = light.name)
+
+        Slider(value = lightPercentage, onValueChange = {
+            lightPercentage = it
+            Glyph.setLightValue(light, it)
+        }, modifier = Modifier.padding(16.dp))
+
     }
 }
 

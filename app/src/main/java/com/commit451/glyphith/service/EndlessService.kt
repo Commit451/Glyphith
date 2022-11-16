@@ -52,14 +52,14 @@ class EndlessService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        log("The service has been created".toUpperCase())
-        var notification = createNotification()
+        log("The service has been created".uppercase())
+        val notification = createNotification()
         startForeground(1, notification)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        log("The service has been destroyed".toUpperCase())
+        log("The service has been destroyed".uppercase())
     }
 
     private fun startService() {
