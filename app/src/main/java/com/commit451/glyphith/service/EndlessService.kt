@@ -22,6 +22,10 @@ import java.util.concurrent.TimeUnit
  */
 class EndlessService : Service() {
 
+    companion object {
+        private const val SecondsBetween = 10L
+    }
+
     private var wakeLock: PowerManager.WakeLock? = null
     private var isServiceStarted = false
 
@@ -87,7 +91,7 @@ class EndlessService : Service() {
                         Glyph.animate()
                     }
                 }
-                delay(TimeUnit.SECONDS.toMillis(5))
+                delay(TimeUnit.SECONDS.toMillis(SecondsBetween))
             }
             log("End of the loop for the service")
         }

@@ -60,6 +60,7 @@ fun Screen(context: Context) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
+        var showSliders by remember { mutableStateOf(false) }
         var isServiceRunning by remember {
             mutableStateOf(
                 Util.isMyServiceRunning(
@@ -81,16 +82,24 @@ fun Screen(context: Context) {
             Text(text = "Off")
         }
 
+        Text(text = "Service")
         Switch(checked = isServiceRunning, onCheckedChange = {
             service(context, it)
             isServiceRunning = it
         })
 
-        lightSlider(light = Light.Battery)
-        lightSlider(light = Light.RearCamera)
-        lightSlider(light = Light.Diagonal)
-        lightSlider(light = Light.USBLine)
-        lightSlider(light = Light.USBDot)
+        Text(text = "Show sliders")
+        Switch(checked = showSliders, onCheckedChange = {
+            showSliders = it
+        })
+
+        if (showSliders) {
+            lightSlider(light = Light.Battery)
+            lightSlider(light = Light.RearCamera)
+            lightSlider(light = Light.Diagonal)
+            lightSlider(light = Light.USBLine)
+            lightSlider(light = Light.USBDot)
+        }
     }
 }
 
