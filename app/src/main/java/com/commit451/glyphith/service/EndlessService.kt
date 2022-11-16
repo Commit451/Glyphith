@@ -55,6 +55,7 @@ class EndlessService : Service() {
         log("The service has been created".uppercase())
         val notification = createNotification()
         startForeground(1, notification)
+        Glyph.loadAnimation(resources)
     }
 
     override fun onDestroy() {
@@ -83,7 +84,7 @@ class EndlessService : Service() {
                     val powerManager = getSystemService(POWER_SERVICE) as PowerManager
                     val isScreenAwake = powerManager.isInteractive
                     if (isScreenAwake) {
-                        Glyph.blink()
+                        Glyph.animate()
                     }
                 }
                 delay(TimeUnit.SECONDS.toMillis(5))

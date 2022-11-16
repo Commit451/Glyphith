@@ -41,6 +41,7 @@ class MainActivity : ComponentActivity() {
         // comment this out normally
         //service(this, true)
         //Glyph.turnOnLight(Glyph.LightUSB)
+        Glyph.loadAnimation(resources)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -69,7 +70,7 @@ fun Screen(context: Context) {
         }
 
         Button(onClick = {
-            Glyph.blink()
+            Glyph.animate()
         }) {
             Text(text = "Animate")
         }

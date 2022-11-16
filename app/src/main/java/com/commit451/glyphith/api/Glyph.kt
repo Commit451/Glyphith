@@ -1,8 +1,14 @@
 package com.commit451.glyphith.api
 
 import android.animation.ValueAnimator
+import android.content.res.Resources
+import com.commit451.glyphith.R
+import com.opencsv.CSVReader
 import com.topjohnwu.superuser.Shell
 import timber.log.Timber
+import java.io.FileReader
+import java.io.InputStream
+import java.io.InputStreamReader
 import kotlin.math.roundToInt
 
 /**
@@ -10,7 +16,7 @@ import kotlin.math.roundToInt
  */
 object Glyph {
 
-    private val debugLog = true
+    private val debugLog = false
     private const val MaxBrightness = 4095
     private const val Duration = 200L
 
@@ -28,6 +34,16 @@ object Glyph {
         Light.Diagonal to PathDiagonal,
         Light.USBLine to PathUSBLine,
         Light.USBDot to PathUSBDot,
+    )
+
+    var currentAnimations = emptyList<ValueAnimator>()
+
+    private val shorthandMap = mapOf(
+        "camera" to Light.RearCamera,
+        "diag" to Light.Diagonal,
+        "battery" to Light.Battery,
+        "usbline" to Light.USBLine,
+        "usbdot" to Light.USBDot,
     )
 
     /**
@@ -48,22 +64,35 @@ object Glyph {
         return currentValue.toFloat() / MaxBrightness
     }
 
-    fun blink() {
-        Light.values().forEachIndexed { index, light ->
-            val va = ValueAnimator.ofInt(0, MaxBrightness, 0)
-            va.duration = Duration
-            va.startDelay = index * Duration
-            va.addUpdateListener { animation ->
-                log("Setting ${light.name} to ${animation.animatedValue}")
-                setNodeString(path(light), animation.animatedValue as Int)
-            }
-            va.start()
+    fun animate() {
+        currentAnimations.forEach {
+            it.start()
         }
     }
 
     fun off() {
         Light.values().forEach {
             setNodeString(path(it), 0)
+        }
+    }
+
+    fun loadAnimation(resources: Resources) {
+        val stream = resources.openRawResource(R.raw.anim)
+        val reader = CSVReader(InputStreamReader(stream))
+        val lines = reader.readAll()
+
+        currentAnimations = lines.map { config ->
+            val light = shorthandMap[config.first()]!!
+            val delay = config[1].toLong()
+            val duration = config[2].toLong()
+            val percent = config.last().toFloat()
+            val va = ValueAnimator.ofInt(0, (MaxBrightness * percent).roundToInt(), 0)
+            va.duration = duration
+            va.startDelay = delay
+            va.addUpdateListener { animation ->
+                setNodeString(path(light), animation.animatedValue as Int)
+            }
+            va
         }
     }
 

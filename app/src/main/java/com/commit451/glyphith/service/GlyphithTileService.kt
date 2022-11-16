@@ -7,6 +7,7 @@ class GlyphithTileService : TileService() {
 
     override fun onClick() {
         super.onClick()
-        Glyph.blink()
+        Glyph.loadAnimation(resources)
+        Glyph.animate()
     }
 }
