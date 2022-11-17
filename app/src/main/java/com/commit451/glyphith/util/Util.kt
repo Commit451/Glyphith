@@ -2,6 +2,9 @@ package com.commit451.glyphith.util
 
 import android.app.ActivityManager
 import android.content.Context
+import android.content.Intent
+import com.commit451.glyphith.service.Actions
+import com.commit451.glyphith.service.EndlessService
 
 object Util {
 
@@ -14,5 +17,12 @@ object Util {
             }
         }
         return false
+    }
+
+    fun service(context: Context, start: Boolean) {
+        Intent(context, EndlessService::class.java).also {
+            it.action = if (start) Actions.START.name else Actions.STOP.name
+            context.startForegroundService(it)
+        }
     }
 }
