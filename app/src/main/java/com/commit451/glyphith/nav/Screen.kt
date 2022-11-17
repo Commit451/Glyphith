@@ -4,4 +4,5 @@ enum class Screen {
     Main,
     Settings,
     Create,
+    Debug,
 }

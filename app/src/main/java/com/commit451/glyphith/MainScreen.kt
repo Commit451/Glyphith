@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -22,6 +23,7 @@ fun MainScreen(
     context: Context,
     navigateToSettings: () -> Unit,
     navigateToCreate: () -> Unit,
+    navigateToDebug: () -> Unit,
 ) {
 
     var showSliders by remember { mutableStateOf(false) }
@@ -73,54 +75,27 @@ fun MainScreen(
                     )
                 }
 
+                if (BuildConfig.DEBUG) {
+                    IconButton(
+                        modifier = Modifier
+                            .size(24.dp),
+                        onClick = navigateToDebug,
+                    ) {
+                        Icon(
+                            Icons.Filled.Warning,
+                            "Debug",
+                        )
+                    }
+                }
             }
 
 
-            Button(onClick = {
+            Button(modifier = Modifier.size(200.dp), onClick = {
                 Glyph.animate()
             }) {
                 Text(text = "Animate")
             }
-
-            Button(onClick = {
-                Glyph.off()
-            }) {
-                Text(text = "Off")
-            }
-
-            Text(text = "Service")
-
-            Text(text = "Show sliders")
-            Switch(checked = showSliders, onCheckedChange = {
-                showSliders = it
-            })
-
-            if (showSliders) {
-                lightSlider(light = Light.Battery)
-                lightSlider(light = Light.RearCamera)
-                lightSlider(light = Light.Diagonal)
-                lightSlider(light = Light.USBLine)
-                lightSlider(light = Light.USBDot)
-            }
         }
-
-    }
-}
-
-@Composable
-private fun lightSlider(light: Light) {
-    var lightPercentage by remember {
-        mutableStateOf(Glyph.readLightValue(light))
-    }
-
-    Column(modifier = Modifier.padding(16.dp)) {
-
-        Text(text = light.name)
-
-        Slider(value = lightPercentage, onValueChange = {
-            lightPercentage = it
-            Glyph.setLightValue(light, it)
-        }, modifier = Modifier.padding(16.dp))
 
     }
 }
