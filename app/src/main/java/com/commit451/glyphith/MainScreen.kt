@@ -67,11 +67,13 @@ fun MainScreen(
                 Switch(checked = isServiceRunning, onCheckedChange = {
                     Util.service(context, it)
                     isServiceRunning = it
-                }, modifier = Modifier.align(Alignment.CenterVertically))
+                }, modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(end = 4.dp))
 
                 IconButton(
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(42.dp)
                         .align(Alignment.CenterVertically),
                     onClick = navigateToSettings,
                 ) {
@@ -84,7 +86,7 @@ fun MainScreen(
                 if (BuildConfig.DEBUG) {
                     IconButton(
                         modifier = Modifier
-                            .size(32.dp)
+                            .size(42.dp)
                             .align(Alignment.CenterVertically),
                         onClick = navigateToDebug,
                     ) {

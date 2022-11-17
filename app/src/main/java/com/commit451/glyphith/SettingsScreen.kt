@@ -1,6 +1,7 @@
 package com.commit451.glyphith
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -11,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.commit451.glyphith.data.Prefs
-import com.commit451.glyphith.util.Util
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,8 +50,8 @@ fun SettingsScreen(context: Context, onBack: () -> Unit) {
                 Switch(checked = alwaysOn, onCheckedChange = {
                     alwaysOn = it
                     Prefs.isAlwaysOn = it
-                    Util.service(context, false)
-                    Util.service(context, true)
+                    Toast.makeText(context, "Please restart the service!", Toast.LENGTH_SHORT)
+                        .show()
                 })
             }
         }
