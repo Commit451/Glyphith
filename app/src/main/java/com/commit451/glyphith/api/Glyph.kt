@@ -66,6 +66,9 @@ object Glyph {
 
     fun animate() {
         currentAnimations.forEach {
+            it.cancel()
+        }
+        currentAnimations.forEach {
             it.start()
         }
     }
