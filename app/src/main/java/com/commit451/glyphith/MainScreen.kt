@@ -1,19 +1,19 @@
 package com.commit451.glyphith
 
 import android.content.Context
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.commit451.glyphith.api.Glyph
-import com.commit451.glyphith.api.Light
+import com.commit451.glyphith.data.PatternLoader
 import com.commit451.glyphith.service.EndlessService
+import com.commit451.glyphith.ui.TitleText
 import com.commit451.glyphith.util.Util
 
 
@@ -26,7 +26,10 @@ fun MainScreen(
     navigateToDebug: () -> Unit,
 ) {
 
-    var showSliders by remember { mutableStateOf(false) }
+    var currentPatternName by remember {
+        mutableStateOf(Glyph.currentPatternName)
+    }
+
     var isServiceRunning by remember {
         mutableStateOf(
             Util.isMyServiceRunning(
@@ -35,6 +38,8 @@ fun MainScreen(
             )
         )
     }
+
+    val patterns = PatternLoader.loadPatterns(context.resources)
 
     Scaffold(
         floatingActionButton = {
@@ -55,18 +60,19 @@ fun MainScreen(
                     .padding(paddingValues)
             ) {
 
-                Text(text = "Glyphith", fontSize = 30.sp)
+                TitleText("Glyphith")
 
                 Spacer(modifier = Modifier.weight(1f))
 
                 Switch(checked = isServiceRunning, onCheckedChange = {
                     Util.service(context, it)
                     isServiceRunning = it
-                })
+                }, modifier = Modifier.align(Alignment.CenterVertically))
 
                 IconButton(
                     modifier = Modifier
-                        .size(24.dp),
+                        .size(32.dp)
+                        .align(Alignment.CenterVertically),
                     onClick = navigateToSettings,
                 ) {
                     Icon(
@@ -78,7 +84,8 @@ fun MainScreen(
                 if (BuildConfig.DEBUG) {
                     IconButton(
                         modifier = Modifier
-                            .size(24.dp),
+                            .size(32.dp)
+                            .align(Alignment.CenterVertically),
                         onClick = navigateToDebug,
                     ) {
                         Icon(
@@ -89,11 +96,34 @@ fun MainScreen(
                 }
             }
 
-
-            Button(modifier = Modifier.size(200.dp), onClick = {
-                Glyph.animate()
-            }) {
-                Text(text = "Animate")
+            patterns.forEach {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .clickable {
+                            Glyph.setPattern(it)
+                            currentPatternName = it.name
+                        }
+                ) {
+                    if (currentPatternName == it.name) {
+                        Icon(
+                            Icons.Filled.CheckCircle,
+                            "Check",
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                    Text(text = it.name, modifier = Modifier.padding(16.dp))
+                    Button(
+                        onClick = {
+                            Glyph.setPattern(it)
+                            Glyph.animate()
+                        },
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(text = "Preview")
+                    }
+                }
             }
         }
 

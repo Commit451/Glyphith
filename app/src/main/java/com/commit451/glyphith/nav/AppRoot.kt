@@ -36,6 +36,10 @@ fun NavHost(context: Context, navController: NavHostController, modifier: Modifi
         startDestination = Screen.Main.name,
         modifier = modifier
     ) {
+        val onBack = {
+            navController.popBackStack()
+            Unit
+        }
         composable(Screen.Main.name) {
             MainScreen(
                 context = context,
@@ -50,8 +54,8 @@ fun NavHost(context: Context, navController: NavHostController, modifier: Modifi
                 }
             )
         }
-        composable(Screen.Settings.name) { SettingsScreen() }
+        composable(Screen.Settings.name) { SettingsScreen(context, onBack) }
         composable(Screen.Create.name) { CreateScreen() }
-        composable(Screen.Debug.name) { DebugScreen() }
+        composable(Screen.Debug.name) { DebugScreen(onBack) }
     }
 }

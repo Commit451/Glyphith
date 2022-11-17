@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.commit451.glyphith.api.Glyph
+import com.commit451.glyphith.data.PatternLoader
 import com.commit451.glyphith.nav.AppRoot
 import com.commit451.glyphith.service.Actions
 import com.commit451.glyphith.util.Util
@@ -19,10 +20,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppRoot(context = this)
         }
-        // comment this out normally
-        //service(this, true)
-        //Glyph.turnOnLight(Glyph.LightUSB)
-        Glyph.loadAnimation(resources)
+        val patterns = PatternLoader.loadPatterns(resources)
+        // TODO fix
+        Glyph.setPattern(patterns.first())
     }
 
     override fun onNewIntent(intent: Intent?) {

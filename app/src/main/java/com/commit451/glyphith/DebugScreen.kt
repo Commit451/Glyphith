@@ -2,6 +2,8 @@ package com.commit451.glyphith
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -11,15 +13,35 @@ import com.commit451.glyphith.api.Light
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DebugScreen() {
+fun DebugScreen(onBack: () -> Unit) {
 
-    Scaffold { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues)) {
-            Text(text = "Debug", modifier = Modifier.padding(paddingValues))
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Debug") },
+                navigationIcon = {
+                    IconButton(
+                        onClick = onBack
+                    ) {
+                        Icon(
+                            Icons.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .padding(16.dp)
+        ) {
+
             Button(onClick = {
                 Glyph.off()
             }) {
-                Text(text = "Off")
+                Text(text = "Turn off all lights")
             }
             LightSlider(light = Light.Battery)
             LightSlider(light = Light.RearCamera)

@@ -9,6 +9,8 @@ import android.os.PowerManager
 import com.commit451.glyphith.MainActivity
 import com.commit451.glyphith.R
 import com.commit451.glyphith.api.Glyph
+import com.commit451.glyphith.data.PatternLoader
+import com.commit451.glyphith.data.Prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -28,6 +30,7 @@ class EndlessService : Service() {
 
     private var wakeLock: PowerManager.WakeLock? = null
     private var isServiceStarted = false
+    private var isAlwaysOn = false
 
     override fun onBind(intent: Intent): IBinder? {
         log("Some component wants to bind with the service")
@@ -57,9 +60,11 @@ class EndlessService : Service() {
     override fun onCreate() {
         super.onCreate()
         log("The service has been created".uppercase())
+        isAlwaysOn = Prefs.isAlwaysOn
         val notification = createNotification()
         startForeground(1, notification)
-        Glyph.loadAnimation(resources)
+        val patterns = PatternLoader.loadPatterns(resources)
+        Glyph.setPattern(patterns.first())
     }
 
     override fun onDestroy() {
@@ -85,10 +90,14 @@ class EndlessService : Service() {
         GlobalScope.launch(Dispatchers.IO) {
             while (isServiceStarted) {
                 launch(Dispatchers.Main) {
-                    val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-                    val isScreenAwake = powerManager.isInteractive
-                    if (isScreenAwake) {
+                    if (isAlwaysOn) {
                         Glyph.animate()
+                    } else {
+                        val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+                        val isScreenAwake = powerManager.isInteractive
+                        if (isScreenAwake) {
+                            Glyph.animate()
+                        }
                     }
                 }
                 delay(TimeUnit.SECONDS.toMillis(SecondsBetween))
