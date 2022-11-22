@@ -55,7 +55,7 @@ fun NavHost(context: Context, navController: NavHostController, modifier: Modifi
             )
         }
         composable(Screen.Settings.name) { SettingsScreen(context, onBack) }
-        composable(Screen.Create.name) { CreateScreen() }
+        composable(Screen.Create.name) { CreateScreen(onBack) }
         composable(Screen.Debug.name) { DebugScreen(onBack) }
     }
 }
