@@ -5,8 +5,11 @@ import android.content.Context
 import android.content.Intent
 import com.commit451.glyphith.service.Actions
 import com.commit451.glyphith.service.EndlessService
+import java.util.concurrent.TimeUnit
 
 object Util {
+
+    private const val TIME_FORMAT = "%02d:%02d"
 
     @Suppress("DEPRECATION")
     fun isMyServiceRunning(context: Context, serviceClass: Class<*>): Boolean {
@@ -25,4 +28,12 @@ object Util {
             context.startForegroundService(it)
         }
     }
+
+
+    // convert time to milli seconds
+    fun Long.formatTime(): String = String.format(
+        TIME_FORMAT,
+        TimeUnit.MILLISECONDS.toMinutes(this),
+        TimeUnit.MILLISECONDS.toSeconds(this) % 60
+    )
 }

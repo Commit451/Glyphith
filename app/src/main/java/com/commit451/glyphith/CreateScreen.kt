@@ -1,21 +1,26 @@
 package com.commit451.glyphith
 
+import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.commit451.glyphith.util.observeAsStateSafe
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateScreen(onBack: () -> Unit) {
+fun CreateScreen(viewModel: GlyphithViewModel, onBack: () -> Unit) {
+    val uiState by viewModel.uiState.observeAsStateSafe()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -30,23 +35,55 @@ fun CreateScreen(onBack: () -> Unit) {
                         )
                     }
                 },
+                actions = {
+                    Text(text = uiState.counter.orEmpty())
+                    if (uiState.currentlyRecording) {
+                        IconButton(
+                            onClick = {
+                                viewModel.onStopRecording()
+                            }
+                        ) {
+                            Icon(
+                                Icons.Filled.PlayArrow,
+                                contentDescription = "Stop"
+                            )
+                        }
+                    }
+
+                }
             )
         }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
-            LightButtonRow(lightName = "Camera", R.drawable.create_light_camera)
-            LightButtonRow(lightName = "Diagonal", R.drawable.create_light_diagonal)
-            LightButtonRow(lightName = "Battery", R.drawable.create_light_battery)
-            LightButtonRow(lightName = "Line", R.drawable.create_light_usb_line)
-            LightButtonRow(lightName = "Dot", R.drawable.create_light_usb_dot)
+            LightButtonRow(
+                lightName = "Camera",
+                R.drawable.create_light_camera,
+                { viewModel.onStartRecording() })
+            LightButtonRow(
+                lightName = "Diagonal",
+                R.drawable.create_light_diagonal,
+                { viewModel.onStartRecording() })
+            LightButtonRow(
+                lightName = "Battery",
+                R.drawable.create_light_battery,
+                { viewModel.onStartRecording() })
+            LightButtonRow(
+                lightName = "Line",
+                R.drawable.create_light_usb_line,
+                { viewModel.onStartRecording() })
+            LightButtonRow(
+                lightName = "Dot",
+                R.drawable.create_light_usb_dot,
+                { viewModel.onStartRecording() })
         }
     }
 }
 
 @Composable
-private fun LightButtonRow(lightName: String, drawableRes: Int) {
+private fun LightButtonRow(lightName: String, drawableRes: Int, onStart: () -> Unit) {
     val scrollState = rememberScrollState()
     val clickCount = remember { mutableStateListOf<String>() }
+    val view = LocalView.current
     Row(
         modifier = Modifier
             .padding(vertical = 8.dp, horizontal = 16.dp)
@@ -59,6 +96,8 @@ private fun LightButtonRow(lightName: String, drawableRes: Int) {
                 shape = ShapeDefaults.Large,
                 onClick = {
                     clickCount.add("asdf")
+                    onStart()
+                    view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                 },
                 modifier = Modifier.size(100.dp)
             ) {

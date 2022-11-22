@@ -6,14 +6,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.commit451.glyphith.CreateScreen
-import com.commit451.glyphith.DebugScreen
-import com.commit451.glyphith.MainScreen
-import com.commit451.glyphith.SettingsScreen
+import com.commit451.glyphith.*
 import com.commit451.glyphith.ui.GlyphithTheme
 
 @Composable
@@ -55,7 +54,10 @@ fun NavHost(context: Context, navController: NavHostController, modifier: Modifi
             )
         }
         composable(Screen.Settings.name) { SettingsScreen(context, onBack) }
-        composable(Screen.Create.name) { CreateScreen(onBack) }
+        composable(Screen.Create.name) {
+            val viewModel: GlyphithViewModel = viewModel()
+            CreateScreen(viewModel, onBack)
+        }
         composable(Screen.Debug.name) { DebugScreen(onBack) }
     }
 }
