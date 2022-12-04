@@ -6,13 +6,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.commit451.glyphith.*
+import com.commit451.glyphith.data.Prefs
 import com.commit451.glyphith.ui.GlyphithTheme
 
 @Composable
@@ -30,14 +30,28 @@ fun AppRoot(context: Context) {
 
 @Composable
 fun NavHost(context: Context, navController: NavHostController, modifier: Modifier = Modifier) {
+    val start = if (Prefs.hasSeenIntro) {
+        Screen.Main.name
+    } else {
+        Screen.Intro.name
+    }
     NavHost(
         navController = navController,
-        startDestination = Screen.Main.name,
+        startDestination = start,
         modifier = modifier
     ) {
         val onBack = {
             navController.popBackStack()
             Unit
+        }
+        composable(Screen.Intro.name) {
+            IntroScreen(
+                context = context,
+                onMoveOn = {
+                    navController.popBackStack()
+                    navController.navigate(Screen.Main.name)
+                }
+            )
         }
         composable(Screen.Main.name) {
             MainScreen(
