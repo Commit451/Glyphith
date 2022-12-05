@@ -43,11 +43,15 @@ fun MainScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = navigateToCreate) {
-                Icon(
-                    Icons.Filled.Add,
-                    "Add",
-                )
+            if (BuildConfig.DEBUG) {
+                FloatingActionButton(onClick = navigateToCreate) {
+                    Icon(
+                        Icons.Filled.Add,
+                        "Add",
+                    )
+                }
+            } else {
+                nothing()
             }
         }
     ) { paddingValues ->
@@ -130,4 +134,9 @@ fun MainScreen(
         }
 
     }
+}
+
+@Composable
+private fun nothing() {
+
 }

@@ -130,10 +130,10 @@ class EndlessService : Service() {
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channel = NotificationChannel(
             notificationChannelId,
-            "Endless Service notifications channel",
+            "Glyphith service",
             NotificationManager.IMPORTANCE_LOW
         ).apply {
-            description = "Endless Service channel"
+            description = "Notifies you that the service is running to control the Glyph lights"
         }
         notificationManager.createNotificationChannel(channel)
 
@@ -159,7 +159,7 @@ class EndlessService : Service() {
         )
             .build()
         return builder
-            .setContentTitle("Glyph Service")
+            .setContentTitle("Glyphith lights running")
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_baseline_flash_on_24)
             .addAction(stopAction)
