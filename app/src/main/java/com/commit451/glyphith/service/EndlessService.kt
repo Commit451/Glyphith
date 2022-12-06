@@ -24,13 +24,10 @@ import java.util.concurrent.TimeUnit
  */
 class EndlessService : Service() {
 
-    companion object {
-        private const val SecondsBetween = 10L
-    }
-
     private var wakeLock: PowerManager.WakeLock? = null
     private var isServiceStarted = false
     private var isAlwaysOn = false
+    private var restInterval = 10L
 
     override fun onBind(intent: Intent): IBinder? {
         log("Some component wants to bind with the service")
@@ -61,6 +58,7 @@ class EndlessService : Service() {
         super.onCreate()
         log("The service has been created".uppercase())
         isAlwaysOn = Prefs.isAlwaysOn
+        restInterval = Prefs.restIntervalSeconds.toLong()
         val notification = createNotification()
         startForeground(1, notification)
         val patterns = PatternLoader.loadPatterns(resources)
@@ -91,7 +89,7 @@ class EndlessService : Service() {
                         }
                     }
                 }
-                delay(TimeUnit.SECONDS.toMillis(SecondsBetween))
+                delay(TimeUnit.SECONDS.toMillis(restInterval))
             }
             log("End of the loop for the service")
         }

@@ -29,6 +29,11 @@ object Util {
         }
     }
 
+    fun restartService(context: Context) {
+        service(context, false)
+        service(context, true)
+    }
+
 
     // convert time to milli seconds
     fun Long.formatTime(): String = String.format(

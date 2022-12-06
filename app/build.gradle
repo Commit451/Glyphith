@@ -69,4 +69,6 @@ dependencies {
     implementation "com.github.topjohnwu.libsu:service:${libsuVersion}"
     // Optional: Provides remote file system support
     implementation "com.github.topjohnwu.libsu:nio:${libsuVersion}"
+
+    implementation "com.chargemap.compose:numberpicker:1.0.3"
 }

@@ -9,6 +9,7 @@ object Prefs {
 
     private const val PrefAlwaysOn = "always_on"
     private const val PrefSeenIntro = "seen_intro"
+    private const val PrefRestIntervalSeconds = "rest_interval_seconds"
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -18,18 +19,27 @@ object Prefs {
 
     var hasSeenIntro: Boolean
         get() = sharedPreferences.getBoolean(PrefSeenIntro, false)
-        set(enabled) {
+        set(value) {
             with(sharedPreferences.edit()) {
-                putBoolean(PrefSeenIntro, enabled)
+                putBoolean(PrefSeenIntro, value)
                 apply()
             }
         }
 
     var isAlwaysOn: Boolean
         get() = sharedPreferences.getBoolean(PrefAlwaysOn, false)
-        set(enabled) {
+        set(value) {
             with(sharedPreferences.edit()) {
-                putBoolean(PrefAlwaysOn, enabled)
+                putBoolean(PrefAlwaysOn, value)
+                apply()
+            }
+        }
+
+    var restIntervalSeconds: Int
+        get() = sharedPreferences.getInt(PrefRestIntervalSeconds, 10)
+        set(value) {
+            with(sharedPreferences.edit()) {
+                putInt(PrefRestIntervalSeconds, value)
                 apply()
             }
         }
