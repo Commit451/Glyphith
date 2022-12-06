@@ -24,10 +24,6 @@ import com.commit451.glyphith.util.Util
 @Composable
 fun SettingsScreen(context: Context, onBack: () -> Unit) {
 
-    var alwaysOn by remember {
-        mutableStateOf(Prefs.isAlwaysOn)
-    }
-
     var restIntervalSeconds by remember {
         mutableStateOf(Prefs.restIntervalSeconds)
     }
@@ -54,17 +50,6 @@ fun SettingsScreen(context: Context, onBack: () -> Unit) {
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
         ) {
-            checkSetting(
-                title = "Always on",
-                description = "The Glyph lights will light up, even if the device is asleep. This will use more battery and is NOT recommended.",
-                isChecked = alwaysOn,
-                onCheckChanged = {
-                    alwaysOn = it
-                    Prefs.isAlwaysOn = it
-                    Util.notifyServiceModified(context)
-                }
-            )
-            Spacer(modifier = Modifier.height(32.dp))
             numberSetting(
                 title = "Rest interval",
                 description = "Set the number of seconds the service will wait before it plays the Glyph animation again. The more frequent, the more battery will be used. Change with caution.",
@@ -75,6 +60,7 @@ fun SettingsScreen(context: Context, onBack: () -> Unit) {
                     Util.notifyServiceModified(context)
                 }
             )
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }

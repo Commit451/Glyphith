@@ -1,8 +1,6 @@
 package com.commit451.glyphith
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -14,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.os.postDelayed
 import com.commit451.glyphith.api.Glyph
 import com.commit451.glyphith.data.PatternLoader
 import com.commit451.glyphith.data.Prefs
@@ -33,15 +30,8 @@ fun MainScreen(
     navigateToAbout: () -> Unit,
 ) {
 
-    var isShowingCountdown by remember {
-        mutableStateOf(false)
-    }
-    var countdownText by remember {
-        mutableStateOf("")
-    }
-
     var currentPatternName by remember {
-        mutableStateOf(Glyph.currentPatternName)
+        mutableStateOf(Prefs.patternName)
     }
 
     var isServiceRunning by remember {
@@ -137,6 +127,9 @@ fun MainScreen(
                                 Prefs.patternName = it.name
                                 Glyph.setPattern(it)
                                 currentPatternName = it.name
+                                if (!isServiceRunning) {
+                                    Glyph.animate()
+                                }
                             }
                     ) {
                         Box(Modifier.fillMaxWidth()) {
@@ -157,62 +150,13 @@ fun MainScreen(
                                     fontSize = 22.sp,
                                     modifier = Modifier.padding(16.dp)
                                 )
-                                Button(
-                                    onClick = {
-                                        isShowingCountdown = true
-                                        showPreview(
-                                            modifyText = { newText ->
-                                                countdownText = newText
-                                            },
-                                            showPreview = {
-                                                Glyph.setPattern(it)
-                                                Glyph.animate()
-                                                isShowingCountdown = false
-                                            }
-                                        )
-                                    },
-                                    modifier = Modifier.padding(16.dp)
-                                ) {
-                                    Text(text = "Preview", color = Color.White)
-                                }
                             }
                         }
                     }
                 }
             }
-
-            if (isShowingCountdown) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            com.commit451.glyphith.ui.Scrim
-                        )
-                ) {
-                    Text(
-                        text = countdownText,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                    )
-                }
-            }
         }
 
-    }
-}
-
-private fun showPreview(modifyText: (newText: String) -> Unit, showPreview: () -> Unit) {
-    val handler = Handler(Looper.getMainLooper())
-    val increment = if (BuildConfig.DEBUG) 200L else 600L
-    modifyText("3")
-    handler.postDelayed(increment) {
-        modifyText("2")
-    }
-    handler.postDelayed(increment * 2) {
-        modifyText("1")
-    }
-    handler.postDelayed(increment * 3) {
-        showPreview()
     }
 }
 

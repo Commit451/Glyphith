@@ -1,0 +1,5 @@
+camera,0,200,0.2
+usbline,0,100,0.2
+usbline,100,100,0.2
+usbline,200,100,0.2
+usbdot,300,100,0.2

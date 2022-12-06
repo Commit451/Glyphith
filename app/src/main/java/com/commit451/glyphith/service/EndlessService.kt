@@ -11,10 +11,7 @@ import com.commit451.glyphith.R
 import com.commit451.glyphith.api.Glyph
 import com.commit451.glyphith.data.PatternLoader
 import com.commit451.glyphith.data.Prefs
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -26,7 +23,6 @@ class EndlessService : Service() {
 
     private var wakeLock: PowerManager.WakeLock? = null
     private var isServiceStarted = false
-    private var isAlwaysOn = false
     private var restInterval = 10L
 
     override fun onBind(intent: Intent): IBinder? {
@@ -73,24 +69,7 @@ class EndlessService : Service() {
         log("Starting the foreground service task")
         isServiceStarted = true
 
-        // we're starting a loop in a coroutine
-        GlobalScope.launch(Dispatchers.IO) {
-            while (isServiceStarted) {
-                launch(Dispatchers.Main) {
-                    if (isAlwaysOn) {
-                        Glyph.animate()
-                    } else {
-                        val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-                        val isScreenAwake = powerManager.isInteractive
-                        if (isScreenAwake) {
-                            Glyph.animate()
-                        }
-                    }
-                }
-                delay(TimeUnit.SECONDS.toMillis(restInterval))
-            }
-            log("End of the loop for the service")
-        }
+        launch()
     }
 
     private fun stopService() {
@@ -109,9 +88,26 @@ class EndlessService : Service() {
         isServiceStarted = false
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun launch() {
+        // we're starting a loop in a coroutine
+        GlobalScope.launch(Dispatchers.IO) {
+            while (isServiceStarted) {
+                launch(Dispatchers.Main) {
+                    val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+                    val isScreenAwake = powerManager.isInteractive
+                    if (isScreenAwake) {
+                        Glyph.animate()
+                    }
+                }
+                delay(TimeUnit.SECONDS.toMillis(restInterval))
+            }
+            log("End of the loop for the service")
+        }
+    }
+
     private fun readModifiedSettings() {
         log("Modifying settings for service")
-        isAlwaysOn = Prefs.isAlwaysOn
         restInterval = Prefs.restIntervalSeconds.toLong()
         val pattern = PatternLoader.currentPattern()
         Glyph.setPattern(pattern)

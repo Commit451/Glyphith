@@ -8,7 +8,6 @@ object Prefs {
     private const val FileName = "glyphith_prefs"
 
     private const val PrefPatternName = "pattern_name"
-    private const val PrefAlwaysOn = "always_on"
     private const val PrefSeenIntro = "seen_intro"
     private const val PrefRestIntervalSeconds = "rest_interval_seconds"
 
@@ -33,15 +32,6 @@ object Prefs {
         set(value) {
             with(sharedPreferences.edit()) {
                 putBoolean(PrefSeenIntro, value)
-                apply()
-            }
-        }
-
-    var isAlwaysOn: Boolean
-        get() = sharedPreferences.getBoolean(PrefAlwaysOn, false)
-        set(value) {
-            with(sharedPreferences.edit()) {
-                putBoolean(PrefAlwaysOn, value)
                 apply()
             }
         }

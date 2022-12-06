@@ -44,6 +44,7 @@ object Glyph {
 
     fun setPattern(lightPattern: LightPattern) {
         log("Setting pattern to ${lightPattern.name}")
+        reset()
         currentPatternName = lightPattern.name
         currentAnimations = lightPattern.animators.map {
             val light = shorthandMap[it.light]!!
