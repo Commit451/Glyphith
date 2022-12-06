@@ -76,15 +76,6 @@ class EndlessService : Service() {
         if (isServiceStarted) return
         log("Starting the foreground service task")
         isServiceStarted = true
-        //setServiceState(this, ServiceState.STARTED)
-
-        // we need this lock so our service gets not affected by Doze Mode
-//        wakeLock =
-//            (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
-//                newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "EndlessService::lock").apply {
-//                    acquire()
-//                }
-//            }
 
         // we're starting a loop in a coroutine
         GlobalScope.launch(Dispatchers.IO) {

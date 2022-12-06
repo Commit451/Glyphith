@@ -9,5 +9,5 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun TitleText(text: String) {
-    Text(text = text, fontSize = 32.sp, modifier = Modifier.padding(16.dp))
+    Text(text = text, fontFamily = FontNDot, fontSize = 32.sp, modifier = Modifier.padding(16.dp))
 }

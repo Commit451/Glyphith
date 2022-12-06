@@ -1,7 +1,9 @@
 package com.commit451.glyphith
 
 import android.content.Context
-import androidx.compose.foundation.clickable
+import android.os.Handler
+import android.os.Looper
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -9,7 +11,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.core.os.postDelayed
 import com.commit451.glyphith.api.Glyph
 import com.commit451.glyphith.data.PatternLoader
 import com.commit451.glyphith.service.EndlessService
@@ -25,6 +29,13 @@ fun MainScreen(
     navigateToCreate: () -> Unit,
     navigateToDebug: () -> Unit,
 ) {
+
+    var isShowingCountdown by remember {
+        mutableStateOf(false)
+    }
+    var countdownText by remember {
+        mutableStateOf("")
+    }
 
     var currentPatternName by remember {
         mutableStateOf(Glyph.currentPatternName)
@@ -56,79 +67,122 @@ fun MainScreen(
         }
     ) { paddingValues ->
 
-        Column(Modifier.padding(16.dp)) {
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(paddingValues)
+        Box {
+            Column(
+                Modifier
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
 
-                TitleText("Glyphith")
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                Switch(checked = isServiceRunning, onCheckedChange = {
-                    Util.service(context, it)
-                    isServiceRunning = it
-                }, modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(end = 4.dp))
-
-                IconButton(
+                Row(
                     modifier = Modifier
-                        .size(42.dp)
-                        .align(Alignment.CenterVertically),
-                    onClick = navigateToSettings,
+                        .fillMaxWidth()
+                        .padding(paddingValues)
                 ) {
-                    Icon(
-                        Icons.Filled.Settings,
-                        "Settings",
-                    )
-                }
 
-                if (BuildConfig.DEBUG) {
+                    TitleText("Glyphith")
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Switch(
+                        checked = isServiceRunning, onCheckedChange = {
+                            Util.service(context, it)
+                            isServiceRunning = it
+                        }, modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .padding(end = 4.dp)
+                    )
+
                     IconButton(
                         modifier = Modifier
                             .size(42.dp)
                             .align(Alignment.CenterVertically),
-                        onClick = navigateToDebug,
+                        onClick = navigateToSettings,
                     ) {
                         Icon(
-                            Icons.Filled.Warning,
-                            "Debug",
+                            Icons.Filled.Settings,
+                            "Settings",
                         )
+                    }
+
+                    if (BuildConfig.DEBUG) {
+                        IconButton(
+                            modifier = Modifier
+                                .size(42.dp)
+                                .align(Alignment.CenterVertically),
+                            onClick = navigateToDebug,
+                        ) {
+                            Icon(
+                                Icons.Filled.Warning,
+                                "Debug",
+                            )
+                        }
+                    }
+                }
+
+                patterns.forEach {
+                    val selected = currentPatternName == it.name
+                    Card(
+                        border = if (selected) BorderStroke(2.dp, Color.White) else null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .clickable {
+                                Glyph.setPattern(it)
+                                Glyph.animate()
+                                currentPatternName = it.name
+                            }
+                    ) {
+                        Box(Modifier.fillMaxWidth()) {
+                            if (selected) {
+                                Icon(
+                                    Icons.Filled.CheckCircle,
+                                    "Selected",
+                                    modifier = Modifier
+                                        .size(70.dp)
+                                        .padding(16.dp)
+                                        .align(Alignment.TopEnd)
+                                )
+                            }
+                            Column {
+                                Text(text = it.name, modifier = Modifier.padding(16.dp))
+                                Button(
+                                    onClick = {
+                                        isShowingCountdown = true
+                                        showPreview(
+                                            modifyText = { newText ->
+                                                countdownText = newText
+                                            },
+                                            showPreview = {
+                                                Glyph.setPattern(it)
+                                                Glyph.animate()
+                                                isShowingCountdown = false
+                                            }
+                                        )
+                                    },
+                                    modifier = Modifier.padding(16.dp)
+                                ) {
+                                    Text(text = "Preview")
+                                }
+                            }
+                        }
                     }
                 }
             }
 
-            patterns.forEach {
-                Card(
+            if (isShowingCountdown) {
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .clickable {
-                            Glyph.setPattern(it)
-                            currentPatternName = it.name
-                        }
-                ) {
-                    if (currentPatternName == it.name) {
-                        Icon(
-                            Icons.Filled.CheckCircle,
-                            "Check",
-                            modifier = Modifier.padding(16.dp)
+                        .fillMaxSize()
+                        .background(
+                            com.commit451.glyphith.ui.Scrim
                         )
-                    }
-                    Text(text = it.name, modifier = Modifier.padding(16.dp))
-                    Button(
-                        onClick = {
-                            Glyph.setPattern(it)
-                            Glyph.animate()
-                        },
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Text(text = "Preview")
-                    }
+                ) {
+                    Text(
+                        text = countdownText,
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                    )
                 }
             }
         }
@@ -136,7 +190,21 @@ fun MainScreen(
     }
 }
 
+private fun showPreview(modifyText: (newText: String) -> Unit, showPreview: () -> Unit) {
+    val handler = Handler(Looper.getMainLooper())
+    val increment = if (BuildConfig.DEBUG) 200L else 600L
+    modifyText("3")
+    handler.postDelayed(increment) {
+        modifyText("2")
+    }
+    handler.postDelayed(increment * 2) {
+        modifyText("1")
+    }
+    handler.postDelayed(increment * 3) {
+        showPreview()
+    }
+}
+
 @Composable
 private fun nothing() {
-
 }

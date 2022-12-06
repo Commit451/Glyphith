@@ -4,7 +4,6 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -45,28 +44,44 @@ fun SettingsScreen(context: Context, onBack: () -> Unit) {
             modifier = Modifier
                 .padding(paddingValues)
         ) {
-
-            Row(modifier = Modifier.padding(16.dp)) {
-
-                Column {
-                    Text(text = "Always on")
-                    Text(
-                        text = "The Glyph lights will blink, even if the device is asleep. This will use more battery and is NOT recommended.",
-                        fontSize = 12.sp
-                    )
+            checkSetting(
+                title = "Always on",
+                description = "The Glyph lights will blink, even if the device is asleep. This will use more battery and is NOT recommended.",
+                isChecked = alwaysOn,
+                onCheckChanged = {
+                    alwaysOn = it
+                    Prefs.isAlwaysOn = it
+                    Toast.makeText(context, "Please restart the service!", Toast.LENGTH_SHORT)
+                        .show()
                 }
-                Switch(
-                    checked = alwaysOn,
-                    onCheckedChange = {
-                        alwaysOn = it
-                        Prefs.isAlwaysOn = it
-                        Toast.makeText(context, "Please restart the service!", Toast.LENGTH_SHORT)
-                            .show()
-                    }, modifier = Modifier
-                        .padding(horizontal = 6.dp)
-                        .align(Alignment.CenterVertically)
-                )
-            }
+            )
         }
+    }
+}
+
+@Composable
+private fun checkSetting(
+    title: String,
+    description: String,
+    isChecked: Boolean,
+    onCheckChanged: (checked: Boolean) -> Unit,
+) {
+    Row(modifier = Modifier.padding(16.dp)) {
+
+        Column {
+            Text(text = title)
+            Text(
+                text = description,
+                fontSize = 12.sp
+            )
+        }
+        Switch(
+            checked = isChecked,
+            onCheckedChange = {
+                onCheckChanged(it)
+            }, modifier = Modifier
+                .padding(horizontal = 6.dp)
+                .align(Alignment.CenterVertically)
+        )
     }
 }

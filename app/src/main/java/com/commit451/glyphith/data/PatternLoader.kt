@@ -12,8 +12,10 @@ object PatternLoader {
 
     fun loadPatterns(resources: Resources): List<LightPattern> {
         return listOf(
-            LightPattern("Chill", loadAnimation(resources, R.raw.chill)),
-            LightPattern("Chaos", loadAnimation(resources, R.raw.chaos)),
+            LightPattern("chill", loadAnimation(resources, R.raw.chill)),
+            LightPattern("chaos", loadAnimation(resources, R.raw.chaos)),
+            LightPattern("oi!", loadAnimation(resources, R.raw.oi)),
+            LightPattern("bulb one", loadAnimation(resources, R.raw.bulbone)),
         )
     }
 
