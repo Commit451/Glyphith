@@ -1,6 +1,7 @@
 package com.commit451.glyphith.data
 
 import android.animation.ValueAnimator
+import android.content.Context
 import android.content.res.Resources
 import com.commit451.glyphith.R
 import com.commit451.glyphith.api.Glyph
@@ -10,13 +11,24 @@ import kotlin.math.roundToInt
 
 object PatternLoader {
 
-    fun loadPatterns(resources: Resources): List<LightPattern> {
-        return listOf(
-            LightPattern("chill", loadAnimation(resources, R.raw.chill)),
+    const val DefaultPatternName = "chill"
+
+    var patterns = emptyList<LightPattern>()
+        private set
+
+    fun init(context: Context) {
+        val resources = context.resources
+        patterns = listOf(
+            LightPattern(DefaultPatternName, loadAnimation(resources, R.raw.chill)),
             LightPattern("chaos", loadAnimation(resources, R.raw.chaos)),
             LightPattern("oi!", loadAnimation(resources, R.raw.oi)),
             LightPattern("bulb one", loadAnimation(resources, R.raw.bulbone)),
         )
+    }
+
+    fun currentPattern(): LightPattern {
+        return patterns.find { it.name == Prefs.patternName }
+            ?: patterns.first()
     }
 
     private fun loadAnimation(resources: Resources, rawRes: Int): List<LightPlusAnimator> {

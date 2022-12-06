@@ -73,10 +73,7 @@ object Glyph {
     }
 
     fun animate() {
-        currentAnimations.forEach {
-            it.cancel()
-        }
-        off()
+        reset()
         currentAnimations.forEach {
             it.start()
         }
@@ -86,6 +83,13 @@ object Glyph {
         Light.values().forEach {
             setNodeString(path(it), 0)
         }
+    }
+
+    private fun reset() {
+        currentAnimations.forEach {
+            it.cancel()
+        }
+        off()
     }
 
     private fun path(light: Light): String {

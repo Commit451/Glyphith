@@ -61,8 +61,7 @@ fun SettingsScreen(context: Context, onBack: () -> Unit) {
                 onCheckChanged = {
                     alwaysOn = it
                     Prefs.isAlwaysOn = it
-                    Util.service(context, false)
-                    Util.service(context, true)
+                    Util.notifyServiceModified(context)
                 }
             )
             Spacer(modifier = Modifier.height(32.dp))
@@ -73,8 +72,7 @@ fun SettingsScreen(context: Context, onBack: () -> Unit) {
                 onValueChanged = {
                     restIntervalSeconds = it
                     Prefs.restIntervalSeconds = it
-
-
+                    Util.notifyServiceModified(context)
                 }
             )
         }

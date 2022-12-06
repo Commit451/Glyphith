@@ -64,6 +64,9 @@ fun NavHost(context: Context, navController: NavHostController, modifier: Modifi
                 },
                 navigateToDebug = {
                     navController.navigate(Screen.Debug.name)
+                },
+                navigateToAbout = {
+                    navController.navigate(Screen.About.name)
                 }
             )
         }
@@ -73,5 +76,6 @@ fun NavHost(context: Context, navController: NavHostController, modifier: Modifi
             CreateScreen(viewModel, onBack)
         }
         composable(Screen.Debug.name) { DebugScreen(onBack) }
+        composable(Screen.About.name) { AboutScreen(onBack) }
     }
 }

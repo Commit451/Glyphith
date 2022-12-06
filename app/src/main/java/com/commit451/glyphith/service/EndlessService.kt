@@ -41,8 +41,9 @@ class EndlessService : Service() {
             val action = intent.action
             log("using an intent with action $action")
             when (action) {
-                Actions.START.name -> startService()
-                Actions.STOP.name -> stopService()
+                ServiceAction.Start.name -> startService()
+                ServiceAction.Stop.name -> stopService()
+                ServiceAction.Modified.name -> readModifiedSettings()
                 else -> log("This should never happen. No action in the received intent")
             }
         } else {
@@ -57,12 +58,9 @@ class EndlessService : Service() {
     override fun onCreate() {
         super.onCreate()
         log("The service has been created".uppercase())
-        isAlwaysOn = Prefs.isAlwaysOn
-        restInterval = Prefs.restIntervalSeconds.toLong()
+        readModifiedSettings()
         val notification = createNotification()
         startForeground(1, notification)
-        val patterns = PatternLoader.loadPatterns(resources)
-        Glyph.setPattern(patterns.first())
     }
 
     override fun onDestroy() {
@@ -109,7 +107,14 @@ class EndlessService : Service() {
             log("Service stopped without being started: ${e.message}")
         }
         isServiceStarted = false
-        //setServiceState(this, ServiceState.STOPPED)
+    }
+
+    private fun readModifiedSettings() {
+        log("Modifying settings for service")
+        isAlwaysOn = Prefs.isAlwaysOn
+        restInterval = Prefs.restIntervalSeconds.toLong()
+        val pattern = PatternLoader.currentPattern()
+        Glyph.setPattern(pattern)
     }
 
     private fun createNotification(): Notification {
@@ -136,7 +141,7 @@ class EndlessService : Service() {
         )
 
         val pendingStopIntent = Intent(this, MainActivity::class.java).let {
-            it.action = Actions.STOP.name
+            it.action = ServiceAction.Stop.name
             PendingIntent.getActivity(this, 0, it, PendingIntent.FLAG_IMMUTABLE)
         }
 

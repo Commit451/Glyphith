@@ -13,9 +13,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.os.postDelayed
 import com.commit451.glyphith.api.Glyph
 import com.commit451.glyphith.data.PatternLoader
+import com.commit451.glyphith.data.Prefs
 import com.commit451.glyphith.service.EndlessService
 import com.commit451.glyphith.ui.TitleText
 import com.commit451.glyphith.util.Util
@@ -28,6 +30,7 @@ fun MainScreen(
     navigateToSettings: () -> Unit,
     navigateToCreate: () -> Unit,
     navigateToDebug: () -> Unit,
+    navigateToAbout: () -> Unit,
 ) {
 
     var isShowingCountdown by remember {
@@ -50,7 +53,7 @@ fun MainScreen(
         )
     }
 
-    val patterns = PatternLoader.loadPatterns(context.resources)
+    val patterns = PatternLoader.patterns
 
     Scaffold(
         floatingActionButton = {
@@ -80,7 +83,12 @@ fun MainScreen(
                         .padding(paddingValues)
                 ) {
 
-                    TitleText("Glyphith")
+                    TitleText(
+                        text = "Glyphith",
+                        modifier = if (BuildConfig.DEBUG) Modifier.clickable {
+                            navigateToDebug()
+                        } else Modifier
+                    )
 
                     Spacer(modifier = Modifier.weight(1f))
 
@@ -105,18 +113,16 @@ fun MainScreen(
                         )
                     }
 
-                    if (BuildConfig.DEBUG) {
-                        IconButton(
-                            modifier = Modifier
-                                .size(42.dp)
-                                .align(Alignment.CenterVertically),
-                            onClick = navigateToDebug,
-                        ) {
-                            Icon(
-                                Icons.Filled.Warning,
-                                "Debug",
-                            )
-                        }
+                    IconButton(
+                        modifier = Modifier
+                            .size(42.dp)
+                            .align(Alignment.CenterVertically),
+                        onClick = navigateToAbout,
+                    ) {
+                        Icon(
+                            Icons.Filled.MoreVert,
+                            "More",
+                        )
                     }
                 }
 
@@ -128,8 +134,8 @@ fun MainScreen(
                             .fillMaxWidth()
                             .padding(16.dp)
                             .clickable {
+                                Prefs.patternName = it.name
                                 Glyph.setPattern(it)
-                                Glyph.animate()
                                 currentPatternName = it.name
                             }
                     ) {
@@ -145,7 +151,12 @@ fun MainScreen(
                                 )
                             }
                             Column {
-                                Text(text = it.name, modifier = Modifier.padding(16.dp))
+                                Text(
+                                    text = it.name,
+                                    color = Color.White,
+                                    fontSize = 22.sp,
+                                    modifier = Modifier.padding(16.dp)
+                                )
                                 Button(
                                     onClick = {
                                         isShowingCountdown = true
@@ -162,7 +173,7 @@ fun MainScreen(
                                     },
                                     modifier = Modifier.padding(16.dp)
                                 ) {
-                                    Text(text = "Preview")
+                                    Text(text = "Preview", color = Color.White)
                                 }
                             }
                         }

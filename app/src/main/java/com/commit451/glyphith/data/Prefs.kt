@@ -7,6 +7,7 @@ object Prefs {
 
     private const val FileName = "glyphith_prefs"
 
+    private const val PrefPatternName = "pattern_name"
     private const val PrefAlwaysOn = "always_on"
     private const val PrefSeenIntro = "seen_intro"
     private const val PrefRestIntervalSeconds = "rest_interval_seconds"
@@ -16,6 +17,16 @@ object Prefs {
     fun init(context: Context) {
         sharedPreferences = context.getSharedPreferences(FileName, Context.MODE_PRIVATE)
     }
+
+    var patternName: String
+        get() = sharedPreferences.getString(PrefPatternName, PatternLoader.DefaultPatternName)
+            ?: PatternLoader.DefaultPatternName
+        set(value) {
+            with(sharedPreferences.edit()) {
+                putString(PrefPatternName, value)
+                apply()
+            }
+        }
 
     var hasSeenIntro: Boolean
         get() = sharedPreferences.getBoolean(PrefSeenIntro, false)

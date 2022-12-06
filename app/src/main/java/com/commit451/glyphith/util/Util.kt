@@ -3,8 +3,8 @@ package com.commit451.glyphith.util
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import com.commit451.glyphith.service.Actions
 import com.commit451.glyphith.service.EndlessService
+import com.commit451.glyphith.service.ServiceAction
 import java.util.concurrent.TimeUnit
 
 object Util {
@@ -23,15 +23,18 @@ object Util {
     }
 
     fun service(context: Context, start: Boolean) {
-        Intent(context, EndlessService::class.java).also {
-            it.action = if (start) Actions.START.name else Actions.STOP.name
-            context.startForegroundService(it)
-        }
+        serviceAction(context, if (start) ServiceAction.Start else ServiceAction.Stop)
     }
 
-    fun restartService(context: Context) {
-        service(context, false)
-        service(context, true)
+    fun notifyServiceModified(context: Context) {
+        serviceAction(context, ServiceAction.Modified)
+    }
+
+    private fun serviceAction(context: Context, action: ServiceAction) {
+        Intent(context, EndlessService::class.java).also {
+            it.action = action.name
+            context.startForegroundService(it)
+        }
     }
 
 
