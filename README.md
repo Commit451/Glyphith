@@ -1,8 +1,11 @@
 # Glyphith
 Unlock your glyphs. Allows you to have your Nothing Phone (1) glyph lights pulse and show like a "screen saver" or ambient lights.
+
 ❗ NOTE THAT THIS APP REQUIRES ROOT ❗
 
-[![Google Play](https://github.com/Commit451/Glyphith/raw/master/assets/google-play-badge.png)](https://play.google.com/store/apps/details?id=com.commit451.glyphith)
+[![Google Play](https://raw.githubusercontent.com/Commit451/Glyphith/main/assets/google-play-badge.png)](https://play.google.com/store/apps/details?id=com.commit451.glyphith)
+
+![Image](assets/screenshot-1.png)
 
 ## Building
 To build, run the following:
