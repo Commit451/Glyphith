@@ -2,20 +2,12 @@
 Unlock your glyphs. Allows you to have your Nothing Phone (1) glyph lights pulse and show like a "screen saver" or ambient lights.
 ❗ NOTE THAT THIS APP REQUIRES ROOT ❗
 
+[![Google Play](https://github.com/Commit451/Glyphith/raw/master/assets/google-play-badge.png)](https://play.google.com/store/apps/details?id=com.commit451.glyphith)
+
 ## Building
-You should be able to build the project from Android Studio without any further setup. If you wanted to do a release build, you would want to make a new keystore, placing the name of the keystore and password in the `app/gradle.properties` file:
-```
-KEYSTORE_NAME=keystore.jks
-KEYSTORE_PASSWORD=keystore_password_here
-KEY_PASSWORD=key_password_here
-```
 To build, run the following:
 ```bash
 ./gradlew assembleDebug
-```
-or, for release builds:
-```bash
-./gradlew assembleRelease
 ```
 
 License

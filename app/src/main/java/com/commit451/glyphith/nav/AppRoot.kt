@@ -46,7 +46,6 @@ fun NavHost(context: Context, navController: NavHostController, modifier: Modifi
         }
         composable(Screen.Intro.name) {
             IntroScreen(
-                context = context,
                 onMoveOn = {
                     navController.popBackStack()
                     navController.navigate(Screen.Main.name)
