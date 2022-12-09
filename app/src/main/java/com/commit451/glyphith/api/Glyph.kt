@@ -11,7 +11,7 @@ import kotlin.math.roundToInt
  */
 object Glyph {
 
-    private val debugLog = false
+    private const val debugLog = false
     const val MaxBrightness = 4095
 
     private const val PathRoot = "sys/devices/platform/soc/984000.i2c/i2c-0/0-0020/leds/aw210xx_led"
@@ -97,9 +97,11 @@ object Glyph {
         return lightMap[light]!!
     }
 
-    private fun setNodeString(light: String, amount: Int): Boolean {
+    private fun setNodeString(light: String, amount: Int) {
         val result = Shell.cmd("echo $amount > $light").exec()
-        return result.isSuccess
+        if (!result.isSuccess) {
+            Timber.e("Error: ${result.err}")
+        }
     }
 
     private fun log(message: String) {

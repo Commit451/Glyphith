@@ -19,9 +19,8 @@ import java.util.concurrent.TimeUnit
 /**
  * https://robertohuertas.com/2019/06/29/android_foreground_services/
  */
-class EndlessService : Service() {
+class GlyphithService : Service() {
 
-    private var wakeLock: PowerManager.WakeLock? = null
     private var isServiceStarted = false
     private var restInterval = 10L
 
@@ -75,11 +74,6 @@ class EndlessService : Service() {
     private fun stopService() {
         log("Stopping the foreground service")
         try {
-            wakeLock?.let {
-                if (it.isHeld) {
-                    it.release()
-                }
-            }
             stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
         } catch (e: Exception) {

@@ -59,9 +59,6 @@ fun NavHost(context: Context, navController: NavHostController, modifier: Modifi
                 navigateToSettings = {
                     navController.navigate(Screen.Settings.name)
                 },
-                navigateToCreate = {
-                    navController.navigate(Screen.Create.name)
-                },
                 navigateToDebug = {
                     navController.navigate(Screen.Debug.name)
                 },
@@ -71,10 +68,6 @@ fun NavHost(context: Context, navController: NavHostController, modifier: Modifi
             )
         }
         composable(Screen.Settings.name) { SettingsScreen(context, onBack) }
-        composable(Screen.Create.name) {
-            val viewModel: GlyphithViewModel = viewModel()
-            CreateScreen(viewModel, onBack)
-        }
         composable(Screen.Debug.name) { DebugScreen(onBack) }
         composable(Screen.About.name) { AboutScreen(onBack) }
     }

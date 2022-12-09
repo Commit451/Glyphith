@@ -4,7 +4,6 @@ enum class Screen {
     Intro,
     Main,
     Settings,
-    Create,
     Debug,
     About,
 }

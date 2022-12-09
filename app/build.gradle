@@ -62,16 +62,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
     implementation "com.jakewharton.timber:timber:5.0.1"
     implementation "com.opencsv:opencsv:4.6"
-
-    def libsuVersion = '5.0.3'
-    // The core module that provides APIs to a shell
-    implementation "com.github.topjohnwu.libsu:core:${libsuVersion}"
-    // Optional: APIs for creating root services. Depends on ":core"
-    implementation "com.github.topjohnwu.libsu:service:${libsuVersion}"
-    // Optional: Provides remote file system support
-    implementation "com.github.topjohnwu.libsu:nio:${libsuVersion}"
-
+    implementation "com.github.topjohnwu.libsu:core:5.0.3"
     implementation "com.chargemap.compose:numberpicker:1.0.3"
-
     implementation "com.mikepenz:aboutlibraries-compose:${aboutlibs_version}"
 }

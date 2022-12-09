@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 import com.commit451.glyphith.api.Glyph
 import com.commit451.glyphith.data.PatternLoader
 import com.commit451.glyphith.data.Prefs
-import com.commit451.glyphith.service.EndlessService
+import com.commit451.glyphith.service.GlyphithService
 import com.commit451.glyphith.ui.TitleText
 import com.commit451.glyphith.util.Util
 
@@ -25,7 +25,6 @@ import com.commit451.glyphith.util.Util
 fun MainScreen(
     context: Context,
     navigateToSettings: () -> Unit,
-    navigateToCreate: () -> Unit,
     navigateToDebug: () -> Unit,
     navigateToAbout: () -> Unit,
 ) {
@@ -38,27 +37,14 @@ fun MainScreen(
         mutableStateOf(
             Util.isMyServiceRunning(
                 context,
-                EndlessService::class.java
+                GlyphithService::class.java
             )
         )
     }
 
     val patterns = PatternLoader.patterns
 
-    Scaffold(
-        floatingActionButton = {
-            if (BuildConfig.DEBUG) {
-                FloatingActionButton(onClick = navigateToCreate) {
-                    Icon(
-                        Icons.Filled.Add,
-                        "Add",
-                    )
-                }
-            } else {
-                nothing()
-            }
-        }
-    ) { paddingValues ->
+    Scaffold { paddingValues ->
 
         Box {
             Column(

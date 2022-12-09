@@ -1,9 +1,7 @@
 package com.commit451.glyphith
 
-import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -16,7 +14,16 @@ import androidx.compose.ui.unit.sp
 import com.commit451.glyphith.data.Prefs
 
 @Composable
-fun IntroScreen(context: Context, onMoveOn: () -> Unit) {
+fun IntroScreen(onMoveOn: () -> Unit) {
+
+    val message = """
+        This app requires root. This is due to the fact that Nothing has not yet provided an API 
+        for controlling the Glyph lights. Additionally, it is more than likely not good for your 
+        phone to keep flashing the Glyph lights over and over, so please use at your own risk and 
+        this app is not responsible for any damage that may occur. If you don't see the lights 
+        changing, you likely have not granted the app root permissions. It only needs it to change
+        the system files that control the glyph lights. See the source code on GitHub to confirm.
+    """.trimIndent()
 
     LaunchedEffect(Prefs.hasSeenIntro) {
         Prefs.hasSeenIntro = true
@@ -30,12 +37,13 @@ fun IntroScreen(context: Context, onMoveOn: () -> Unit) {
         ) {
             Text(text = "Warning", fontSize = 32.sp)
             Text(
-                text = "This app requires root. This is due to the fact that Nothing has not yet provided an API for controlling the Glyph lights. Additionally, it is more than likely not good for your phone to keep flashing the Glyph lights over and over, so please use at your own risk and this app is not responsible for any damage that may occur.",
-                fontSize = 12.sp,
+                text = message,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
-            Button(onClick = onMoveOn,
-                    modifier = Modifier.padding(vertical = 16.dp)) {
+            Button(
+                onClick = onMoveOn,
+                modifier = Modifier.padding(vertical = 16.dp)
+            ) {
                 Text("Got it")
             }
         }
