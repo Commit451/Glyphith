@@ -3,7 +3,7 @@ Unlock your glyphs. Allows you to have your Nothing Phone (1) glyph lights pulse
 
 ❗ NOTE THAT THIS APP REQUIRES ROOT ❗
 
-<a href="https://play.google.com/store/apps/details?id=com.commit451.glyphith"><img src="assets/google-play-badge.png" width=50% height=50%></a>
+<a href="https://play.google.com/store/apps/details?id=com.commit451.glyphith"><img src="assets/google-play-badge.png" width=25% height=25%></a>
 
 <img src="assets/screenshot-1.png" width=25% height=25%>
 
