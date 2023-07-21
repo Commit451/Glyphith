@@ -13,6 +13,8 @@ To build, run the following:
 ./gradlew assembleDebug
 ```
 
+https://github.com/Commit451/Glyphith/assets/1459320/9f58fab6-0d55-48bc-b1bb-ebec13770ec4
+
 License
 =======
 
