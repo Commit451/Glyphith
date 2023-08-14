@@ -4,7 +4,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: setup java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
       - name: Checkout the code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Build the app
         run: ./gradlew build
+
